@@ -1,0 +1,2 @@
+# local tooling + scraped cache + secrets — never publish these
+tools/

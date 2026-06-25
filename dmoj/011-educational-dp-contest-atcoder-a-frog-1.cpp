@@ -1,0 +1,106 @@
+/*
+ * Educational DP Contest AtCoder A - Frog 1  [dpa]
+ * Problem:  https://dmoj.ca/problem/dpa
+ * Verdict:  ACCEPTED (7.0 pts)   Solved: 2022-02-12
+ * Language: C++20
+ * Runtime:  0.065069026 s     Memory: 4724.0 KB
+ * Source:   https://dmoj.ca/src/4324337
+ */
+
+#include <bits/stdc++.h>
+using namespace std;
+// Important functions and defines
+/// BidoTeima legacy functions
+typedef long long ll;
+ll POW(ll a, ll b) {
+   ll res = 1;
+   while(b > 0) {
+    if(b%2==1) res*=a;
+    a*=a;
+    b/=2;
+   }
+   return res;
+}
+ll sum_range2d(ll i, ll j, ll k, ll l, vector<vector<ll>>& sum) {
+    return sum[k][l] - sum[k][j - 1] - sum[i - 1][l] + sum[i - 1][j - 1];
+}
+ll gcd(ll a, ll b) {
+    return (b == 0 ? abs(a) : gcd(b, a % b));
+}
+ll dist(ll X1, ll Y1, ll X2, ll Y2) {
+    return sqrt( POW(X1-X2, 2) + POW(Y1-Y2,2) );
+}
+bool intersect(pair<ll, ll> p1, pair<ll, ll> p2) {
+  ll x1 = p1.first, x2 = p1.second, y1 = p2.first, y2 = p2.second;
+  return (x1 >= y1 && x1 <= y2) ||
+         (x2 >= y1 && x2 <= y2) ||
+         (y1 >= x1 && y1 <= x2) ||
+         (y2 >= x1 && y2 <= x2);
+}
+bool isPrime(ll n) {
+    for(ll i = 2; i * i <= n; i++) if(n%i==0) return false;
+    return true;
+}
+const ll maxn = 105;
+ll C[maxn + 1][maxn + 1];
+void bin_coeff()
+{
+    C[0][0] = 1;
+    for (ll n = 1; n <= maxn; ++n) {
+        C[n][0] = C[n][n] = 1;
+        for (ll k = 1; k < n; ++k)
+            C[n][k] = C[n - 1][k - 1] + C[n - 1][k];
+    }
+}
+/*vector<bool> prime(10000005, true);
+void sievePrime(ll n)
+{
+    for (int p=2; p*p<=n; p++)
+    {
+        if (prime[p] == true)
+        {
+            for (int i=p*p; i<=n; i += p)
+                prime[i] = false;
+        }
+    }
+}*/
+bool isVowel(char ch) {
+    return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
+}
+/// End of BidoTeima legacy functions
+#define SCD(t) scanf("%d",&t)
+#define SCLD(t) scanf("%ld",&t)
+#define SCLLD(t) scanf("%lld",&t)
+#define SCC(t) scanf("%c",&t)
+#define SCS(t) scanf("%s",t)
+#define SCF(t) scanf("%f",&t)
+#define SCLF(t) scanf("%lf",&t)
+#define all(cont) cont.begin(), cont.end()
+#define rall(cont) cont.rbegin(), cont.rend()
+#define f first
+#define s second
+#define fast     ios::sync_with_stdio(0);cout.tie(0);cin.tie(0);
+//End
+int32_t main()
+{
+    ///freopen ("output.txt","w",stdout);
+    ///freopen("input.txt", "r", stdin);
+    ///bin_coeff();
+    fast
+    int n, k=2;
+    cin>>n;
+    ll h[n];
+    for(int i = 0; i < n; i++) cin>>h[i];
+    vector<ll> dp(n, INT_MAX);
+    dp[0]=0;
+    for(int i = 1; i < n; i++) {
+        int x = 1;
+        for(int j = i-1; j >= 0 && x <= k; j--) {
+            dp[i]=min(dp[i], dp[j]+abs(h[j]-h[i]));
+            //cout<<"dp["<<i+1<<"]="<<dp[i]<<'\n';
+            ++x;
+        }
+    }
+    cout<<dp[n-1];
+    return 0;
+}
